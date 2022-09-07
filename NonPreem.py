@@ -29,22 +29,24 @@ CPU_process_record = []
 
 time = min([process["ArrivalTime"] for process in jobQueue ])
 
-while jobQueue != [] or readyQueue != [] or waitingQueue != []:
-    lstOfDeletion = []
+while jobQueue != []: #or readyQueue != [] or waitingQueue != []:
+    # lstOfDeletion = []
     for j, i in enumerate(jobQueue):
 
         if i["ArrivalTime"] <= time:
 
             readyQueue.append(i)
-            lstOfDeletion.append(i)
+            #lstOfDeletion.append(i)
+            jobQueue.remove(i)
 
-    for i in lstOfDeletion:
-        jobQueue.remove(i)
+    # for i in lstOfDeletion:
+    #     jobQueue.remove(i)
 
-    lstOfDeletion = []
+    # lstOfDeletion = []
 
-    listOfBurstTimes = [process["BurstTime"] for process in readyQueue]
-    sortedListOfBurstTimes = sorted(listOfBurstTimes)
+    # listOfBurstTimes =[process["BurstTime"] for process in readyQueue]
+    sortedListOfBurstTimes = sorted([process["BurstTime"] for process in readyQueue])
+    # sortedListOfBurstTimes = sorted(listOfBurstTimes)
 
     sortedReadyQueue = [process for burst in sortedListOfBurstTimes for process in readyQueue if process["BurstTime"] == burst]
 
@@ -55,12 +57,13 @@ while jobQueue != [] or readyQueue != [] or waitingQueue != []:
 
 
     for j in sortedReadyQueue:
-        lstOfDeletion.append(j)
+        # lstOfDeletion.append(j)
+        sortedReadyQueue.remove(j)
         startTime = time
         time += j["BurstTime"]
         CPU_process_record.append({"Process":j["Process"], "StartTime":startTime, "EndTime":time})
-    for j in lstOfDeletion:
-        sortedReadyQueue.remove(j)
+    # for j in lstOfDeletion:
+    #     sortedReadyQueue.remove(j)
 
 print("\n \nShortest Job First ")
 SumOfStartTime = 0
